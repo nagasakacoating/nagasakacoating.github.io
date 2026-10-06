@@ -401,12 +401,12 @@ const EN={
   '計画・進捗管理':'Plan & Progress','マスター管理':'Master',
   '登録・リアルタイム確認':'Register & Monitor','画像・QRコード登録':'Images & QR',
   /* nav */'戻る':'Back',
-  /* anomaly */'異常を記録':'Record Anomaly','呼称':'Part No.',
+  /* anomaly */'異常を記録':'Record Anomaly','品番（背番号）':'Part No.',
   '異常の種類を選択してください':'Select type','備考（任意）':'Note (opt.)',
   '記録する':'Record','キャンセル':'Cancel',
   '設備の異常':'Equipment Fail','素材の異常':'Material Defect',
   '塗装の異常':'Coating Defect','かんばんの異常':'Kanban Issue',
-  /* qr */'QR照合':'QR Verify','照合呼称':'Expected',
+  /* qr */'QR照合':'QR Verify','照合品番':'Expected',
   'QRリーダーでスキャンしてください':'Scan with QR reader',
   'スキャンすると自動で照合されます（Enterで確定）':'Auto-verified on scan',
   'スキャン待機中...':'Waiting...','照合する':'Verify','照合成功 ✓':'Verified ✓',
@@ -444,7 +444,7 @@ function QRScannerModal({expectedValue,label,onSuccess,onClose}){
       <div style={{background:'#fff',borderRadius:24,width:'100%',maxWidth:400,overflow:'hidden'}}>
         <div style={{background:'#0F6E56',padding:'16px 20px'}}>
           <div style={{fontSize:16,fontWeight:700,color:'#fff'}}>QR照合</div>
-          <div style={{fontSize:12,color:'rgba(255,255,255,.7)',marginTop:2}}>照合呼称: {label}</div>
+          <div style={{fontSize:12,color:'rgba(255,255,255,.7)',marginTop:2}}>照合品番: {label}</div>
         </div>
         <div style={{padding:'28px 24px 20px',textAlign:'center'}}>
           <div style={{fontSize:56,lineHeight:1,marginBottom:16,color:'#0F6E56'}}>▦</div>
@@ -489,8 +489,8 @@ function AnomalyModal({seiban,role,line,types,onClose,onDone}){
   const{lang,t}=useLang();
   const ID={
     '異常を記録':'Catat Kelainan',
-    '呼称':'No. Produk (No. Seri)',
-    '呼称':'No. Seri',
+    '品番（背番号）':'No. Produk (No. Seri)',
+    '背番号':'No. Seri',
     '異常の種類':'Jenis Kelainan',
     '備考（任意）':'Catatan (opsional)',
     'キャンセル':'Batal',
@@ -528,8 +528,8 @@ function AnomalyModal({seiban,role,line,types,onClose,onDone}){
           <div style={{fontSize:12,color:'rgba(255,255,255,.8)',marginTop:2}}>{it(role)}　{line?(lang==='id'?`${it('ライン')} ${line}`:line+'ライン'):''}</div>
         </div>
         <div style={{padding:'18px 20px'}}>
-          <div style={{fontSize:12,color:'#888',marginBottom:6}}>{it('呼称')}</div>
-          <input value={customSb} onChange={e=>setCustomSb(e.target.value)} placeholder={it('呼称')} style={{marginBottom:14,fontSize:15}}/>
+          <div style={{fontSize:12,color:'#888',marginBottom:6}}>{it('品番（背番号）')}</div>
+          <input value={customSb} onChange={e=>setCustomSb(e.target.value)} placeholder={it('背番号')} style={{marginBottom:14,fontSize:15}}/>
           <div style={{fontSize:12,color:'#888',marginBottom:10,fontWeight:500}}>{it('異常の種類')}</div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:14}}>
             {types.map(at=>(
@@ -600,7 +600,7 @@ function PlanEditModal({plan,onClose}){
         </div>
         <div style={{overflowY:'auto',padding:'16px 20px'}}>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 16px'}}>
-            <Row label="呼称" k="seiban"/><Row label="ライン" k="line"/>
+            <Row label="背番号" k="seiban"/><Row label="ライン" k="line"/>
             <Row label="掛け時間" k="kakeTime"/><Row label="降ろし時間" k="orosiTime"/>
             <Row label="所要時間" k="reqTime"/><Row label="製品数" k="products" type="number"/>
             <Row label="素材箱数" k="materialBoxes" type="number"/><Row label="ハンガー名称" k="hangerName"/>
@@ -626,7 +626,7 @@ function AnomalyHistory({anomalies}){
     <div style={{border:'1px solid #E0DED8',borderRadius:12,overflow:'hidden'}}>
       <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
         <thead><tr style={{background:'#F8F7F4'}}>
-          {['時刻','呼称','L','工程','異常種別','備考'].map(h=>(
+          {['時刻','背番号','L','工程','異常種別','備考'].map(h=>(
             <th key={h} style={{padding:'12px 12px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666'}}>{h}</th>
           ))}
         </tr></thead>
@@ -653,7 +653,7 @@ function AnomalyHistory({anomalies}){
 const LIFT_COLS=[
   {key:'kakeTime',label:'掛け時間'},
   {key:'reqTime',label:'所要時間'},
-  {key:'seiban',label:'呼称'},
+  {key:'seiban',label:'背番号'},
   {key:'products',label:'製品数',unit:'個'},
   {key:'materialBoxes',label:'素材箱数',unit:'箱'},
   {key:'finishedBoxes',label:'完成品箱数',unit:'箱'},
@@ -686,11 +686,11 @@ function LiftmanScreen({plans,master,anomalyTypes,onComplete,onBack}){
   const ID={
     '← 戻る':'← Kembali','リフトマン':'Liftman','進捗':'Progres','件':'item',
     '異常':'Kelainan','A ライン':'Jalur A','B ライン':'Jalur B',
-    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','呼称':'No. Seri',
+    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','背番号':'No. Seri',
     '製品数':'Jml Produk','素材箱数':'Kotak Bahan','完成品箱数':'Kotak Jadi',
     '操作':'Operasi','✓完了':'✓Selesai','確認':'Konfirmasi','完了':'Selesai',
     '計画が登録されていません':'Tidak ada rencana yang terdaftar',
-    '製品確認':'Konfirmasi Produk','呼称:':'No. Seri:',
+    '製品確認':'Konfirmasi Produk','背番号:':'No. Seri:',
     '製品画像未登録':'Gambar produk belum terdaftar',
     'キャンセル':'Batal','個':'pcs','箱':'kotak',
     '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?',
@@ -721,7 +721,7 @@ function LiftmanScreen({plans,master,anomalyTypes,onComplete,onBack}){
   }
 
   async function handleUndo(item){
-    if(!window.confirm(`${t('完了を取り消しますか？')}\n${t('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${t('完了を取り消しますか？')}\n${t('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`completions.${role}`]:firebase.firestore.FieldValue.delete(),
@@ -836,7 +836,7 @@ function LiftmanScreen({plans,master,anomalyTypes,onComplete,onBack}){
           <div style={{background:'#fff',borderRadius:20,width:'100%',maxWidth:480,overflow:'hidden',boxShadow:'0 8px 40px rgba(0,0,0,.3)'}}>
             <div style={{background:confirmItem.lc,padding:'16px 20px'}}>
               <div style={{fontSize:16,fontWeight:700,color:'#fff'}}>{t('製品確認')}</div>
-              <div style={{fontSize:13,color:'rgba(255,255,255,.8)',marginTop:2}}>{t('呼称:')} {confirmItem.item.seiban}</div>
+              <div style={{fontSize:13,color:'rgba(255,255,255,.8)',marginTop:2}}>{t('背番号:')} {confirmItem.item.seiban}</div>
             </div>
             <div style={{padding:20}}>
               {confirmItem.img?(
@@ -865,7 +865,7 @@ function LiftmanScreen({plans,master,anomalyTypes,onComplete,onBack}){
           <div style={{background:'#fff',borderRadius:20,width:'100%',maxWidth:360,padding:'28px 24px',textAlign:'center',boxShadow:'0 8px 40px rgba(0,0,0,.35)'}}>
             <div style={{fontSize:36,marginBottom:12}}>✅</div>
             <div style={{fontSize:18,fontWeight:700,color:'#111',marginBottom:6}}>{t('完了')}にしますか？</div>
-            <div style={{fontSize:14,color:'#666',marginBottom:24}}>{t('呼称:')} <strong>{completeItem.item.seiban}</strong></div>
+            <div style={{fontSize:14,color:'#666',marginBottom:24}}>{t('背番号:')} <strong>{completeItem.item.seiban}</strong></div>
             <div style={{display:'flex',gap:10}}>
               <button onClick={()=>setCompleteItem(null)} style={{flex:1,padding:'14px',background:'#fff',border:'1.5px solid #C0BEB5',borderRadius:12,fontSize:15,fontWeight:700,color:'#555'}}>{t('キャンセル')}</button>
               <button onClick={async()=>{const it=completeItem.item;setCompleteItem(null);await handleComplete(it);}} style={{flex:2,padding:'14px',background:completeItem.lc,border:'none',borderRadius:12,fontSize:15,fontWeight:700,color:'#fff'}}>{t('完了')}</button>
@@ -884,13 +884,13 @@ function HangerScreen({plans,master,anomalyTypes,onComplete,onBack}){
   const HID={
     '← 戻る':'← Kembali','ハンガー段取り':'Persiapan Hanger','進捗':'Progres','件':'item',
     '異常':'Kelainan','A ライン':'Jalur A','B ライン':'Jalur B',
-    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','呼称':'No. Seri',
+    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','背番号':'No. Seri',
     'ハンガー名称':'Nama Hanger','本数':'Jumlah','設定電圧':'Volt Set',
     '空フック':'Kait Kosong','連続本数':'Beruntun','電圧確認':'Cek Volt','操作':'Operasi',
     '電圧切替':'Ganti Volt','✓完了':'✓Selesai','確認':'Konfirmasi','完了':'Selesai',
     '待機中…':'Tunggu…','完了後':'Setelah selesai',
     '計画が登録されていません':'Tidak ada rencana yang terdaftar',
-    'ハンガー確認':'Konfirmasi Hanger','呼称:':'No. Seri:',
+    'ハンガー確認':'Konfirmasi Hanger','背番号:':'No. Seri:',
     'ハンガー画像未登録':'Gambar hanger belum terdaftar',
     'キャンセル':'Batal','完了にしますか？':'Konfirmasi selesai?',
     '電圧変更の確認':'Konfirmasi Ganti Volt',
@@ -976,7 +976,7 @@ function HangerScreen({plans,master,anomalyTypes,onComplete,onBack}){
   }
 
   async function handleUndo(item){
-    if(!window.confirm(`${t('完了を取り消しますか？')}\n${t('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${t('完了を取り消しますか？')}\n${t('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`completions.${role}`]:firebase.firestore.FieldValue.delete(),
@@ -1023,7 +1023,7 @@ function HangerScreen({plans,master,anomalyTypes,onComplete,onBack}){
   }
 
   const HCOLS=[
-    {key:'kakeTime',label:'掛け時間'},{key:'reqTime',label:'所要時間'},{key:'seiban',label:'呼称'},
+    {key:'kakeTime',label:'掛け時間'},{key:'reqTime',label:'所要時間'},{key:'seiban',label:'背番号'},
     {key:'hangerName',label:'ハンガー名称',ms:true},{key:'hangers',label:'本数',ms:true,unit:'本'},
     {key:'voltage',label:'設定電圧',ms:true,unit:'V'},{key:'emptyHooks',label:'空フック',ms:true,unit:'個'},
     {key:'continuous',label:'連続本数',ms:true,unit:'本'},
@@ -1184,7 +1184,7 @@ function HangerScreen({plans,master,anomalyTypes,onComplete,onBack}){
           <div style={{background:'#fff',borderRadius:20,width:'100%',maxWidth:480,overflow:'hidden',boxShadow:'0 8px 40px rgba(0,0,0,.3)'}}>
             <div style={{background:confirmItem.lc,padding:'16px 20px'}}>
               <div style={{fontSize:16,fontWeight:700,color:'#fff'}}>{t('ハンガー確認')}</div>
-              <div style={{fontSize:13,color:'rgba(255,255,255,.8)',marginTop:2}}>{t('呼称:')} {confirmItem.item.seiban}</div>
+              <div style={{fontSize:13,color:'rgba(255,255,255,.8)',marginTop:2}}>{t('背番号:')} {confirmItem.item.seiban}</div>
             </div>
             <div style={{padding:20}}>
               {confirmItem.img
@@ -1217,7 +1217,7 @@ function HangerScreen({plans,master,anomalyTypes,onComplete,onBack}){
             <div style={{fontSize:56,marginBottom:12}}>⚠️</div>
             <div style={{fontSize:22,fontWeight:700,color:'#D32F2F',marginBottom:10}}>{t('電圧変更の確認')}</div>
             <div style={{fontSize:15,color:'#444',lineHeight:1.7,marginBottom:8}}>
-              {t('呼称:')} <strong style={{color:'#111'}}>{voltageAlert.item.seiban}</strong>
+              {t('背番号:')} <strong style={{color:'#111'}}>{voltageAlert.item.seiban}</strong>
             </div>
             <div style={{fontSize:14,color:'#666',marginBottom:28}}>
               {t('設定電圧:')} <strong style={{color:voltageColor(master[voltageAlert.item.seiban]?.voltage??voltageAlert.item.voltage),fontSize:18}}>
@@ -1248,7 +1248,7 @@ function HangerScreen({plans,master,anomalyTypes,onComplete,onBack}){
           <div style={{background:'#fff',borderRadius:20,width:'100%',maxWidth:360,padding:'28px 24px',textAlign:'center',boxShadow:'0 8px 40px rgba(0,0,0,.35)'}}>
             <div style={{fontSize:36,marginBottom:12}}>✅</div>
             <div style={{fontSize:18,fontWeight:700,color:'#111',marginBottom:6}}>{t('完了にしますか？')}</div>
-            <div style={{fontSize:14,color:'#666',marginBottom:24}}>{t('呼称:')} <strong>{completeItem.item.seiban}</strong></div>
+            <div style={{fontSize:14,color:'#666',marginBottom:24}}>{t('背番号:')} <strong>{completeItem.item.seiban}</strong></div>
             <div style={{display:'flex',gap:10}}>
               <button onClick={()=>setCompleteItem(null)} style={{flex:1,padding:'14px',background:'#fff',border:'1.5px solid #C0BEB5',borderRadius:12,fontSize:15,fontWeight:700,color:'#555'}}>{t('キャンセル')}</button>
               <button onClick={async()=>{const it=completeItem.item;setCompleteItem(null);await handleComplete(it);}} style={{flex:2,padding:'14px',background:completeItem.lc,border:'none',borderRadius:12,fontSize:15,fontWeight:700,color:'#fff'}}>{t('完了')}</button>
@@ -1267,7 +1267,7 @@ function DantoriScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   const DID={
     '← 戻る':'← Kembali','製品段取り':'Persiapan Produk','ライン':'Jalur',
     '進捗':'Progres','件':'item','異常':'Kelainan',
-    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','呼称':'No. Seri',
+    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','背番号':'No. Seri',
     '素材箱数':'Kotak Bahan','QR照合':'Cek QR','1個確認':'Cek 1 pcs','操作':'Operasi',
     '✓完了':'✓Selesai','確認':'Konfirmasi','完了':'Selesai',
     '計画が登録されていません':'Tidak ada rencana yang terdaftar',
@@ -1284,7 +1284,7 @@ function DantoriScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
     '素材箱数：':'Kotak Bahan:','箱':'kotak',
     '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?',
     'QR照合を取り消しますか？':'Batalkan cek QR ini?','1個確認を取り消しますか？':'Batalkan cek 1 pcs ini?',
-    '呼称:':'No. Seri:',
+    '背番号:':'No. Seri:',
   };
   const dt=s=>lang==='id'?(DID[s]??s):s;
   const[saving,setSaving]=useState({});
@@ -1394,7 +1394,7 @@ function DantoriScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   }
 
   async function handleUndo(item){
-    if(!window.confirm(`${dt('完了を取り消しますか？')}\n${dt('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${dt('完了を取り消しますか？')}\n${dt('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`completions.${role}`]:firebase.firestore.FieldValue.delete(),
@@ -1404,7 +1404,7 @@ function DantoriScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   }
 
   async function handleUndoQR(item){
-    if(!window.confirm(`${dt('QR照合を取り消しますか？')}\n${dt('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${dt('QR照合を取り消しますか？')}\n${dt('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`qrCheck_${line}`]:firebase.firestore.FieldValue.delete(),
@@ -1414,7 +1414,7 @@ function DantoriScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   }
 
   async function handleUndoSample(item){
-    if(!window.confirm(`${dt('1個確認を取り消しますか？')}\n${dt('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${dt('1個確認を取り消しますか？')}\n${dt('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`sampleCheck_${line}`]:firebase.firestore.FieldValue.delete(),
@@ -1457,7 +1457,7 @@ function DantoriScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
                   <th colSpan={7} style={{...TH,background:lc,textAlign:'center',fontSize:13,padding:'6px 12px',borderRadius:'12px 12px 0 0'}}>{lang==='id'?`${dt('ライン')} ${line}`:`${line}ライン`}</th>
                 </tr>
                 <tr>
-                  {['掛け時間','所要時間','呼称','素材箱数','QR照合','1個確認','操作'].map(h=>(
+                  {['掛け時間','所要時間','背番号','素材箱数','QR照合','1個確認','操作'].map(h=>(
                     <th key={h} style={{...TH,background:lc+'EE'}}>{dt(h)}</th>
                   ))}
                 </tr>
@@ -1630,7 +1630,7 @@ function DantoriScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
             <div style={{fontSize:14,color:'#555',marginBottom:24}}>
               {lang==='id'
                 ? <>No. Seri <strong style={{color:lc}}>{currentSelected.seiban}</strong> apakah sudah dicek 1 pcs?</>
-                : <>呼称 <strong style={{color:lc}}>{currentSelected.seiban}</strong> の<br/>製品を1個実物確認しましたか？</>
+                : <>背番号 <strong style={{color:lc}}>{currentSelected.seiban}</strong> の<br/>製品を1個実物確認しましたか？</>
               }
             </div>
             <div style={{display:'flex',gap:12}}>
@@ -1657,7 +1657,7 @@ function TotalDantoriScreen({plans,master,anomalyTypes,onComplete,onBack}){
   const DID={
     '← 戻る':'← Kembali','製品段取り トータル':'Persiapan Produk Total','進捗':'Progres','件':'item',
     '異常':'Kelainan','A ライン':'Jalur A','B ライン':'Jalur B',
-    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','呼称':'No. Seri',
+    '掛け時間':'Waktu Pasang','所要時間':'Waktu Proses','背番号':'No. Seri',
     '素材箱数':'Kotak Bahan','QR照合':'Cek QR','箱数':'Jml Kotak','抜けかんばん':'Kanban Hilang','操作':'Operasi',
     '✓完了':'✓Selesai','確認':'Konfirmasi','完了':'Selesai',
     '計画が登録されていません':'Tidak ada rencana yang terdaftar',
@@ -1669,7 +1669,7 @@ function TotalDantoriScreen({plans,master,anomalyTypes,onComplete,onBack}){
     '箱数を入力してください':'Masukkan jumlah kotak',
     '抜けかんばんを確認してください':'Konfirmasi kanban hilang',
     'Skip':'Skip','Skip済み':'Sudah Skip','リセット':'Reset',
-    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','呼称:':'No. Seri:',
+    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','背番号:':'No. Seri:',
   };
   const dt=s=>lang==='id'?(DID[s]??s):s;
 
@@ -1713,7 +1713,7 @@ function TotalDantoriScreen({plans,master,anomalyTypes,onComplete,onBack}){
   }
 
   async function handleUndo(item){
-    if(!window.confirm(`${dt('完了を取り消しますか？')}\n${dt('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${dt('完了を取り消しますか？')}\n${dt('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         'completions.段取りトータル':firebase.firestore.FieldValue.delete(),
@@ -1723,7 +1723,7 @@ function TotalDantoriScreen({plans,master,anomalyTypes,onComplete,onBack}){
   }
 
   const TH={padding:'3px 5px',fontSize:11,fontWeight:700,color:'#fff',whiteSpace:'normal',wordBreak:'break-all',lineHeight:1.3,textAlign:'center',borderRight:'1px solid rgba(255,255,255,.25)'};
-  const DCOLS=['掛け時間','所要時間','呼称','素材箱数','QR照合','箱数','抜けかんばん','操作'];
+  const DCOLS=['掛け時間','所要時間','背番号','素材箱数','QR照合','箱数','抜けかんばん','操作'];
   const colCount=DCOLS.length;
 
   function renderSide(item,lc,lb){
@@ -1957,14 +1957,14 @@ function TsuriKakeScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   const{lang,setLang}=useLang();
   const TK_ID={
     '戻る':'Kembali','吊り掛け':'Gantung','ライン':'Jalur','完了':'Selesai','異常':'Kelainan',
-    '呼称':'No. Seri','製品写真':'Foto Produk','掛け穴':'Lubang Gantung','全体掛け姿':'Tampilan Gantung',
+    '背番号':'No. Seri','製品写真':'Foto Produk','掛け穴':'Lubang Gantung','全体掛け姿':'Tampilan Gantung',
     'テーキン':'Tekin','ハンガー写真':'Foto Hanger','通電確保方法':'Metode Pengantar Arus',
     '注意ポイント①':'Catatan ①','注意ポイント②':'Catatan ②','注意ポイント③':'Catatan ③',
     '未登録':'Belum terdaftar','1個確認済み':'1 pcs sudah dicek','1個確認':'Cek 1 pcs',
     '保存中...':'Menyimpan...','掛け時間':'Waktu Gantung','所要時間':'Durasi',
     '製品数':'Jml Produk','ハンガー名称':'Nama Hanger','ハンガー本数':'Jml Hanger',
     '掛け数':'Jml Gantung','端数予定':'Sisa','掛け人数':'Petugas','掛幅':'Lebar','操作':'Op.',
-    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','呼称:':'No. Seri:',
+    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','背番号:':'No. Seri:',
   };
   const tk=s=>lang==='id'?(TK_ID[s]||s):s;
   const[saving,setSaving]=useState({});
@@ -2002,7 +2002,7 @@ function TsuriKakeScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   }
 
   async function handleUndo(item){
-    if(!window.confirm(`${tk('完了を取り消しますか？')}\n${tk('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${tk('完了を取り消しますか？')}\n${tk('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`completions.${role}`]:firebase.firestore.FieldValue.delete(),
@@ -2053,7 +2053,7 @@ function TsuriKakeScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
             </colgroup>
             <thead style={{position:'sticky',top:0,zIndex:10}}>
               <tr>
-                {['掛け時間','所要時間','呼称','製品数','ハンガー名称','ハンガー本数','掛け数','端数予定','掛け人数','掛幅','1個確認','操作'].map(h=>(
+                {['掛け時間','所要時間','背番号','製品数','ハンガー名称','ハンガー本数','掛け数','端数予定','掛け人数','掛幅','1個確認','操作'].map(h=>(
                   <th key={h} style={TH}>{tk(h)}</th>
                 ))}
               </tr>
@@ -2112,7 +2112,7 @@ function TsuriKakeScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
         <div style={{flex:1,overflow:'hidden',background:'#FAFAF8',borderLeft:'1px solid #E0DED8',padding:'4px 6px',boxSizing:'border-box',minWidth:0,display:'flex',flexDirection:'column'}}>
           {selectedItem&&sm?(
             <div style={{display:'flex',flexDirection:'column',gap:3,flex:1,minHeight:0}}>
-              <div style={{fontSize:11,fontWeight:700,color:lc,flexShrink:0}}>{tk('呼称')} {selectedItem.seiban}</div>
+              <div style={{fontSize:11,fontWeight:700,color:lc,flexShrink:0}}>{tk('背番号')} {selectedItem.seiban}</div>
               {/* 製品写真（全幅） */}
               <div style={{flexShrink:0}}>
                 <div style={labelStyle}>{tk('製品写真')}</div>
@@ -2187,7 +2187,7 @@ function OrosiScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   const OID={
     '戻る':'Kembali','降ろし検査':'Inspeksi Turun','ライン':'Jalur',
     '完了':'Selesai','異常':'Kelainan',
-    '降ろし時間':'Waktu Turun','所要時間':'Durasi','呼称':'No. Seri',
+    '降ろし時間':'Waktu Turun','所要時間':'Durasi','背番号':'No. Seri',
     '製品数':'Jml Produk','降ろし人数':'Petugas','1個確認':'Cek 1 pcs','操作':'Operasi',
     '確認':'Konfirmasi','製品写真':'Foto Produk','テーキン':'Tekin','掛け穴':'Lubang Gantung',
     '梱包仕様':'Spesifikasi Kemasan',
@@ -2195,8 +2195,8 @@ function OrosiScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
     '✔ 1個確認済':'✔ 1 pcs OK','□ 1個確認':'□ Cek 1 pcs',
     '保存中...':'Menyimpan...','✓ 完了':'✓ Selesai','完了':'Selesai',
     '確認ボタンを押すと詳細が表示されます':'Tekan tombol Konfirmasi untuk detail',
-    '呼称 ':'No. Seri ','（未登録）':'(Belum terdaftar)','個':'pcs','人':'org',
-    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','呼称:':'No. Seri:',
+    '背番号 ':'No. Seri ','（未登録）':'(Belum terdaftar)','個':'pcs','人':'org',
+    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','背番号:':'No. Seri:',
   };
   const ot=s=>lang==='id'?(OID[s]??s):s;
   const[saving,setSaving]=useState({});
@@ -2229,7 +2229,7 @@ function OrosiScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   }
 
   async function handleUndo(item){
-    if(!window.confirm(`${ot('完了を取り消しますか？')}\n${ot('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${ot('完了を取り消しますか？')}\n${ot('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`completions.${role}`]:firebase.firestore.FieldValue.delete(),
@@ -2275,7 +2275,7 @@ function OrosiScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
             <table style={{borderCollapse:'collapse'}}>
               <thead style={{position:'sticky',top:0,zIndex:10}}>
                 <tr>
-                  {['降ろし時間','所要時間','呼称','製品数','降ろし人数','1個確認','操作'].map(h=>(
+                  {['降ろし時間','所要時間','背番号','製品数','降ろし人数','1個確認','操作'].map(h=>(
                     <th key={h} style={TH}>{ot(h)}</th>
                   ))}
                 </tr>
@@ -2328,7 +2328,7 @@ function OrosiScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
         <div style={{flex:1,overflow:'auto',background:'#FAFAF8',borderLeft:'1px solid #E0DED8',padding:8,boxSizing:'border-box',minWidth:0}}>
           {selectedItem&&sm?(
             <div style={{display:'flex',flexDirection:'column',gap:6}}>
-              <div style={{fontSize:13,fontWeight:700,color:lc}}>{ot('呼称 ')}{selectedItem.seiban}</div>
+              <div style={{fontSize:13,fontWeight:700,color:lc}}>{ot('背番号 ')}{selectedItem.seiban}</div>
               {/* 収容数・秤番号 */}
               {(sm.yokousu||sm.hakariNum)&&(
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:5}}>
@@ -2422,7 +2422,7 @@ function ShipScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   const SID={
     '戻る':'Kembali','出荷':'Pengiriman','ライン':'Jalur',
     '完了':'Selesai','異常':'Kelainan',
-    '降ろし時間':'Waktu Turun','所要時間':'Durasi','呼称':'No. Seri',
+    '降ろし時間':'Waktu Turun','所要時間':'Durasi','背番号':'No. Seri',
     '完成品箱数':'Kotak Jadi','1個確認':'Cek 1 pcs','出荷数':'Jml Kirim','操作':'Operasi',
     '確認':'Konfirmasi','製品写真':'Foto Produk','テーキン':'Tekin',
     '梱包仕様':'Spesifikasi Kemasan',
@@ -2431,9 +2431,9 @@ function ShipScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
     '✔ 1個確認済':'✔ 1 pcs OK','□ 1個確認':'□ Cek 1 pcs',
     '保存中...':'Menyimpan...','✓ 完了':'✓ Selesai',
     '確認ボタンを押すと詳細が表示されます':'Tekan tombol Konfirmasi untuk detail',
-    '呼称 ':'No. Seri ','入力':'Input','箱':'kotak',
+    '背番号 ':'No. Seri ','入力':'Input','箱':'kotak',
     '（未登録）':'(Belum terdaftar)','保存中':'Menyimpan',
-    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','呼称:':'No. Seri:',
+    '取消':'Batalkan','完了を取り消しますか？':'Batalkan penyelesaian ini?','背番号:':'No. Seri:',
   };
   const st=s=>lang==='id'?(SID[s]??s):s;
   const[saving,setSaving]=useState({});
@@ -2470,7 +2470,7 @@ function ShipScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
   }
 
   async function handleUndo(item){
-    if(!window.confirm(`${st('完了を取り消しますか？')}\n${st('呼称:')} ${item.seiban}`))return;
+    if(!window.confirm(`${st('完了を取り消しますか？')}\n${st('背番号:')} ${item.seiban}`))return;
     try{
       await db.collection('plans').doc(item.id).update({
         [`completions.${role}`]:firebase.firestore.FieldValue.delete(),
@@ -2504,7 +2504,7 @@ function ShipScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
           <div style={{width:'fit-content',minWidth:'100%'}}>
             <table style={{borderCollapse:'collapse',tableLayout:'fixed',width:'100%'}}>
               <thead style={{position:'sticky',top:0,zIndex:10}}>
-                <tr>{['降ろし時間','所要時間','呼称','完成品箱数','1個確認','出荷数','操作'].map(h=>(
+                <tr>{['降ろし時間','所要時間','背番号','完成品箱数','1個確認','出荷数','操作'].map(h=>(
                   <th key={h} style={TH}>{st(h)}</th>
                 ))}</tr>
               </thead>
@@ -2565,7 +2565,7 @@ function ShipScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
         <div style={{flex:1,overflow:'auto',background:'#FAFAF8',borderLeft:'1px solid #E0DED8',padding:8,boxSizing:'border-box',minWidth:0}}>
           {selectedItem&&sm?(
             <div style={{display:'flex',flexDirection:'column',gap:6}}>
-              <div style={{fontSize:13,fontWeight:700,color:lc}}>{st('呼称 ')}{selectedItem.seiban}</div>
+              <div style={{fontSize:13,fontWeight:700,color:lc}}>{st('背番号 ')}{selectedItem.seiban}</div>
               {/* 収容数・秤番号 */}
               {(sm.yokousu||sm.hakariNum)&&(
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:5}}>
@@ -2648,7 +2648,7 @@ function ShipScreen({plans,master,anomalyTypes,onComplete,onBack,line}){
       {showAnomaly&&<AnomalyModal seiban={selectedItem?.seiban||''} role={role} line={line} types={anomalyTypes} onClose={()=>setShowAnomaly(false)} onDone={()=>setShowAnomaly(false)}/>}
       {numPadItem&&<NumPadModal
         value={shipCounts[numPadItem.id]??numPadItem.shipCount??''}
-        label={lang==='id'?`Jml Kirim　No. Seri ${numPadItem.seiban}`:`出荷数　呼称 ${numPadItem.seiban}`}
+        label={lang==='id'?`Jml Kirim　No. Seri ${numPadItem.seiban}`:`出荷数　背番号 ${numPadItem.seiban}`}
         color={lc}
         onConfirm={v=>setShipCounts(s=>({...s,[numPadItem.id]:v}))}
         onClose={()=>setNumPadItem(null)}/>}
@@ -2855,7 +2855,7 @@ const SHEET_COLS=[
   {key:'kakeTime',label:'掛け時間'},
   {key:'orosiTime',label:'降ろし時間'},
   {key:'reqTime',label:'所要時間'},
-  {key:'seiban',label:'呼称',bold:true},
+  {key:'seiban',label:'背番号',bold:true},
   {key:'products',label:'製品数',unit:'個'},
   {key:'materialBoxes',label:'素材箱数',unit:'箱'},
   {key:'fraction',label:'端数予定',unit:'個'},
@@ -2962,7 +2962,7 @@ function AdminRegister({plans,master,onRegister}){
       await onRegister(prev,planDate);
       const ac=prev.filter(i=>i.line==='A').length,bc=prev.filter(i=>i.line==='B').length;
       const desc=ac&&bc?`Aライン ${ac}件・Bライン ${bc}件`:ac?`Aライン ${ac}件`:`Bライン ${bc}件`;
-      setMsg({ok:true,t:desc+' 登録しました（新規呼称はマスターに自動登録されます）'});
+      setMsg({ok:true,t:desc+' 登録しました（新規背番号はマスターに自動登録されます）'});
       setPrev(null);setText('');
     }catch(e){setMsg({ok:false,t:'登録に失敗: '+e.message});}
     finally{setLoading(false);}
@@ -2981,7 +2981,7 @@ function AdminRegister({plans,master,onRegister}){
           <button key={l} onClick={()=>{setLine(l);setPrev(null);setMsg(null);}} style={{minHeight:44,padding:'0 24px',borderRadius:10,fontSize:15,fontWeight:600,border:`2px solid ${line===l?'#185FA5':'#C0BEB5'}`,background:line===l?'#E6F1FB':'#fff',color:line===l?'#185FA5':'#888'}}>{l}ライン</button>
         ))}
       </div>
-      <div style={{fontSize:12,color:'#888',marginBottom:8,lineHeight:1.6}}>A・B両方の場合はまとめて選択してコピペ（30列）。片方のみの場合は下のライン選択で区別（15列）。列順：掛け時間／降ろし時間／所要時間／呼称／製品数／素材箱数／ハンガー名称／ハンガー本数／ハンガー内端数予定／掛け人数／掛幅／設定電圧／電圧上限／完成品箱数／降ろし人数</div>
+      <div style={{fontSize:12,color:'#888',marginBottom:8,lineHeight:1.6}}>A・B両方の場合はまとめて選択してコピペ（30列）。片方のみの場合は下のライン選択で区別（15列）。列順：掛け時間／降ろし時間／所要時間／背番号／製品数／素材箱数／ハンガー名称／ハンガー本数／ハンガー内端数予定／掛け人数／掛幅／設定電圧／電圧上限／完成品箱数／降ろし人数</div>
       <textarea value={text} onChange={e=>{setText(e.target.value);setPrev(null);setMsg(null);}} placeholder={"08:05\t09:07\t01:02\tUD365\t120\t10\tH-360A\t12\t3\t3\t450\t200\t220\t10\t2\n08:08\t09:11\t01:03\tUD72\t144\t12\tH-72B\t8\t2\t2\t380\t185\t205\t12\t2"} style={{width:'100%',height:120,fontFamily:'monospace',fontSize:12,resize:'vertical',marginBottom:10}}/>
       <div style={{display:'flex',gap:10,marginBottom:14,flexWrap:'wrap'}}>
         <button onClick={doParse} disabled={!text.trim()} style={{minHeight:48,padding:'0 24px',borderRadius:10,border:'1px solid #C0BEB5',background:'#fff',fontSize:15}}>読み込み</button>
@@ -2994,7 +2994,7 @@ function AdminRegister({plans,master,onRegister}){
           <div style={{fontSize:14,fontWeight:600,color:'#555',marginBottom:10}}>プレビュー — {line}ライン（{prev.length}件）</div>
           <div style={{overflowX:'auto',border:'1px solid #E0DED8',borderRadius:12}}>
             <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
-              <thead><tr style={{background:'#F8F7F4'}}>{['','L','呼称','掛け時間','降ろし時間','製品数','ハンガー名称','設定電圧','マスター'].map(h=><th key={h} style={{padding:'10px 8px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',whiteSpace:'nowrap'}}>{h}</th>)}</tr></thead>
+              <thead><tr style={{background:'#F8F7F4'}}>{['','L','背番号','掛け時間','降ろし時間','製品数','ハンガー名称','設定電圧','マスター'].map(h=><th key={h} style={{padding:'10px 8px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',whiteSpace:'nowrap'}}>{h}</th>)}</tr></thead>
               <tbody>
                 {prev.map((item,i)=>{const img=master[item.seiban]?.imageUrl;return(
                   <tr key={i} style={{borderBottom:'1px solid #F0EEE8'}}>
@@ -3044,7 +3044,7 @@ function AdminProgress({plans}){
         <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
           <thead><tr style={{background:'#F8F7F4',position:'sticky',top:0,zIndex:2}}>
             <th style={{padding:'12px 12px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',width:40}}>L</th>
-            <th style={{padding:'12px 12px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',width:120}}>呼称</th>
+            <th style={{padding:'12px 12px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',width:120}}>背番号</th>
             <th style={{padding:'12px 12px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',width:90}}>掛け時間</th>
             <th style={{padding:'12px 12px',textAlign:'left',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',width:90}}>降ろし時間</th>
             <th style={{padding:'12px 12px',textAlign:'right',borderBottom:'1px solid #E0DED8',fontWeight:600,color:'#666',width:80}}>製品数</th>
@@ -3131,7 +3131,7 @@ function HistoryScreen(){
   }
 
   function downloadCSV(){
-    const headers=['日付','L','呼称','掛け時間','降ろし時間','製品数','端数実績','完成品箱数','出荷数','電圧確認','QR照合','QRスキップ','1個確認','リフトマン','製品段取り','ハンガー段取り','掛け','降ろし検査','出荷','異常件数'];
+    const headers=['日付','L','背番号','掛け時間','降ろし時間','製品数','端数実績','完成品箱数','出荷数','電圧確認','QR照合','QRスキップ','1個確認','リフトマン','製品段取り','ハンガー段取り','掛け','降ろし検査','出荷','異常件数'];
     const rows=plans.map(item=>{
       const qc=item[`qrCheck_${item.line}`];
       const sc=item[`sampleCheck_${item.line}`];
@@ -3209,7 +3209,7 @@ function HistoryScreen(){
         <div style={{overflowX:'auto',border:'1px solid #E0DED8',borderRadius:12}}>
           <table style={{borderCollapse:'collapse',fontSize:12}}>
             <thead><tr style={{background:'#F8F7F4'}}>
-              <TH c="日付"/><TH c="L"/><TH c="呼称"/><TH c="掛け時間"/><TH c="降ろし時間"/>
+              <TH c="日付"/><TH c="L"/><TH c="背番号"/><TH c="掛け時間"/><TH c="降ろし時間"/>
               <TH c="製品数"/><TH c="端数実績"/><TH c="完成品箱数"/><TH c="出荷数"/>
               <TH c="電圧確認"/><TH c="QR照合"/><TH c="1個確認"/>
               <TH c="リフトマン"/><TH c="製品段取り"/><TH c="ハンガー段取り"/><TH c="掛け"/><TH c="降ろし検査"/><TH c="出荷"/>
@@ -3288,24 +3288,6 @@ function AdminScreen({plans,master,anomalies,onRegister,onBack}){
 
 function MasterScreen({master,anomalyTypes,onAddAnomalyType,onRemoveAnomalyType,onBack}){
   const[sel,setSel]=useState(null);
-  const[partNumber,setPartNumber]=useState('');
-  const[processNames,setProcessNames]=useState(['']);
-  const[savingIdentity,setSavingIdentity]=useState(false);
-  const[identityMessage,setIdentityMessage]=useState('');
-  useEffect(()=>{
-    setPartNumber(master[sel]?.partNumber||'');
-    setProcessNames(master[sel]?.processNames?.length?master[sel].processNames:['']);
-    setIdentityMessage('');
-  },[master,sel]);
-  async function saveIdentity(){
-    if(!sel||savingIdentity)return;
-    setSavingIdentity(true);setIdentityMessage('');
-    try{
-      await db.collection('master').doc(sel).set({partNumber:partNumber.trim(),processNames:[...new Set(processNames.map(n=>n.trim()).filter(Boolean))]},{merge:true});
-      setIdentityMessage('保存しました');
-    }catch(e){setIdentityMessage('保存に失敗しました: '+e.message);}
-    finally{setSavingIdentity(false);}
-  }
   const[newSb,setNewSb]=useState('');
   const[uploadPct,setUploadPct]=useState(-1);
   const[adding,setAdding]=useState(false);
@@ -3612,7 +3594,7 @@ function MasterScreen({master,anomalyTypes,onAddAnomalyType,onRemoveAnomalyType,
 
   async function handleDeleteSeiban(){
     if(!sel)return;
-    if(!window.confirm(`呼称「${sel}」をマスターから削除しますか？\n画像も削除されます。`))return;
+    if(!window.confirm(`背番号「${sel}」をマスターから削除しますか？\n画像も削除されます。`))return;
     try{
       try{await stor.ref(`product-images/${sel}`).delete();}catch(e){}
       await db.collection('master').doc(sel).delete();
@@ -3630,10 +3612,10 @@ function MasterScreen({master,anomalyTypes,onAddAnomalyType,onRemoveAnomalyType,
 
   return(
     <div className="screen-wide">
-      <NavBar title="マスター管理" sub="呼称・画像・QRコード" onBack={onBack} wide={true}/>
+      <NavBar title="マスター管理" sub="背番号・画像・QRコード" onBack={onBack} wide={true}/>
       <div style={{padding:'24px',maxWidth:1400,margin:'0 auto'}}>
         <div style={{display:'flex',gap:0,marginBottom:20,borderBottom:'1px solid #E0DED8'}}>
-          {[['seiban','呼称マスター'],['anomaly','異常種別管理']].map(([id,label])=>(
+          {[['seiban','背番号マスター'],['anomaly','異常種別管理']].map(([id,label])=>(
             <button key={id} onClick={()=>setMasterTab(id)} style={{padding:'12px 24px',background:'none',border:'none',fontSize:14,fontWeight:600,color:masterTab===id?'#185FA5':'#888',borderBottom:masterTab===id?'3px solid #185FA5':'3px solid transparent'}}>{label}</button>
           ))}
         </div>
@@ -3659,7 +3641,7 @@ function MasterScreen({master,anomalyTypes,onAddAnomalyType,onRemoveAnomalyType,
         {masterTab==='seiban'&&(
           <div>
             <div style={{display:'flex',gap:8,marginBottom:12}}>
-              <input value={newSb} onChange={e=>setNewSb(e.target.value)} placeholder="新しい呼称を追加..." style={{flex:1}} onKeyDown={e=>e.key==='Enter'&&handleAdd()}/>
+              <input value={newSb} onChange={e=>setNewSb(e.target.value)} placeholder="新しい背番号を追加..." style={{flex:1}} onKeyDown={e=>e.key==='Enter'&&handleAdd()}/>
               <button onClick={handleAdd} disabled={!newSb.trim()||adding} style={{minHeight:48,padding:'0 16px',borderRadius:10,border:'none',background:adding?'#B4B2A9':'#185FA5',color:'#fff',fontSize:14,fontWeight:600,whiteSpace:'nowrap'}}>{adding?'追加中...':'追加'}</button>
             </div>
             {seibanList.length===0&&(
@@ -3709,27 +3691,10 @@ function MasterScreen({master,anomalyTypes,onAddAnomalyType,onRemoveAnomalyType,
                   </div>
                 </div>
                 <div style={{padding:'16px',overflowY:'auto',flex:1}}>
-                  <section style={{marginBottom:20}}>
-                    <label style={{display:'block',marginBottom:12}}>品番
-                      <input value={partNumber} onChange={e=>setPartNumber(e.target.value)} disabled={savingIdentity}/>
-                    </label>
-                    <div style={{marginBottom:6}}>工程名</div>
-                    {processNames.map((name,index)=>(
-                      <div key={index} style={{display:'flex',gap:8,marginBottom:8}}>
-                        <input aria-label={`工程名 ${index+1}`} value={name} disabled={savingIdentity} onChange={e=>setProcessNames(ns=>ns.map((n,i)=>i===index?e.target.value:n))}/>
-                        <button title="工程を削除" aria-label="工程を削除" disabled={savingIdentity} onClick={()=>setProcessNames(ns=>ns.length===1?['']:ns.filter((_,i)=>i!==index))} style={{minWidth:40}}>×</button>
-                      </div>
-                    ))}
-                    <div style={{display:'flex',gap:8}}>
-                      <button disabled={savingIdentity} onClick={()=>setProcessNames(ns=>[...ns,''])} className="btn-ghost">工程を追加</button>
-                      <button disabled={savingIdentity} onClick={saveIdentity} className="btn-ghost">{savingIdentity?'保存中...':'品番・工程名を保存'}</button>
-                    </div>
-                    <div role="status" style={{marginTop:8}}>{identityMessage}</div>
-                  </section>
                   <div style={{display:'flex',gap:16,flexWrap:'wrap',marginBottom:16,alignItems:'flex-start'}}>
                     <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
                       <div style={{background:'#fff',border:'1px solid #E0DED8',borderRadius:10,padding:6}}><QRDisplay value={selData?.qrText||sel} size={130}/></div>
-                      <span style={{fontSize:11,color:'#888',textAlign:'center',maxWidth:150}}>{selData?.qrText?'カスタム文字列':'呼称をQR化'}</span>
+                      <span style={{fontSize:11,color:'#888',textAlign:'center',maxWidth:150}}>{selData?.qrText?'カスタム文字列':'背番号をQR化'}</span>
                     </div>
                     <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:8,flex:1,minWidth:130}}>
                       {selImg?(
@@ -3759,7 +3724,7 @@ function MasterScreen({master,anomalyTypes,onAddAnomalyType,onRemoveAnomalyType,
                   </div>
                   <div style={{marginTop:16,paddingTop:14,borderTop:'1px solid #F0EEE8'}}>
                     <div style={{fontSize:12,fontWeight:600,color:'#888',marginBottom:8}}>QR文字列設定</div>
-                    <div style={{fontSize:11,color:'#aaa',marginBottom:8,lineHeight:1.6}}>未設定の場合は呼称（{sel}）をそのままQR化します</div>
+                    <div style={{fontSize:11,color:'#aaa',marginBottom:8,lineHeight:1.6}}>未設定の場合は背番号（{sel}）をそのままQR化します</div>
                     <div style={{display:'flex',gap:8}}>
                       <input value={qrText} onChange={e=>setQrText(e.target.value)}
                         placeholder={'例: https://example.com/'+sel+' または 任意の文字列'}
@@ -4233,7 +4198,7 @@ function App(){
     });
     await batch.commit();
 
-    // 計画内の呼称でマスター未登録のものを自動登録（in上限10件ずつチャンク処理）
+    // 計画内の背番号でマスター未登録のものを自動登録（in上限10件ずつチャンク処理）
     const newSeibanList=[...new Set(items.map(i=>i.seiban))];
     const existingIds=new Set();
     for(let i=0;i<newSeibanList.length;i+=10){
@@ -4265,14 +4230,7 @@ function App(){
 
   if(screen==='home')return wrap(<HomeScreen onRole={selectRole} onAdmin={id=>setScreen(id)}/>);
   if(screen==='lineSelect')return wrap(<LineSelectScreen role={role} onLine={l=>{setLine(l);setScreen('worker');}} onBack={()=>setScreen('home')}/>);
-  if(screen==='worker'){
-    const processRole=role==='掛け'?'吊り掛け':role;
-    const eligiblePlans=plans.filter(p=>{
-      const names=master[p.seiban]?.processNames;
-      return Array.isArray(names)&&names.some(name=>name.trim()===role||name.trim()===processRole);
-    });
-    return wrap(<WorkerScreen role={role} line={line} plans={eligiblePlans} master={master} anomalyTypes={anomalyTypes} onComplete={onComplete} onUndo={onUndo} onBack={()=>setScreen('home')}/>);
-  }
+  if(screen==='worker')return wrap(<WorkerScreen role={role} line={line} plans={plans} master={master} anomalyTypes={anomalyTypes} onComplete={onComplete} onUndo={onUndo} onBack={()=>setScreen('home')}/>);
   if(screen==='admin')return wrap(<AdminScreen plans={plans} master={master} anomalies={anomalies} onRegister={onRegister} onBack={()=>setScreen('home')}/>);
   if(screen==='master')return wrap(<MasterScreen master={master} anomalyTypes={anomalyTypes} onAddAnomalyType={addAnomalyType} onRemoveAnomalyType={removeAnomalyType} onBack={()=>setScreen('home')}/>);
   return null;
